@@ -145,7 +145,8 @@ class MainActivity : AppCompatActivity() {
         try {
             val siteNames = string.toLowerCase(Locale.ROOT).split("//").takeLast(1)[0]
                 .split('.')
-            val supportedSites = arrayOf("bridgemoscow", "gambler", "nnbridge", "bridgesport")
+            val supportedSites = arrayOf("bridgemoscow", "gambler", "nnbridge", "bridgesport",
+                                         "bridgeresults")
             return supportedSites.any {it in siteNames}
         }
         catch (e: Exception) {return false}
