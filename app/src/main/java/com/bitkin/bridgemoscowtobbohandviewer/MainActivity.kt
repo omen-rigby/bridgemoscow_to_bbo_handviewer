@@ -117,11 +117,11 @@ class MainActivity : AppCompatActivity() {
             val declarer = findViewById<Spinner>(R.id.declarerSpinner)
                 .getSelectedItem().toString().toUpperCase(Locale.ROOT)
             val passes = "p".repeat(("NESW".indexOf(declarer) - "NESW".indexOf(dealer) + 4) % 4)
+            bboUrl = bboUrl.replace("&a=[^&]+".toRegex(), "")
             bboUrl += "&a=$passes$level$denominationLatin"+"ppp"
         }
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(bboUrl))
+        val browserIntent = Intent(ACTION_VIEW, Uri.parse(bboUrl))
         startActivity(browserIntent)
-        bboUrl = ""
     }
 
     fun composeEmail(view: View?) {
