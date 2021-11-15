@@ -45,13 +45,9 @@ class MainActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.errorText).visibility = View.INVISIBLE
                 button.setEnabled(isKnownURL(s.toString()))
                 if (button.isEnabled()) {
-                    button.setOnClickListener(object : View.OnClickListener {
-                        override fun onClick(view: View?) {
-                            if (bboUrl != "") {
-                                openHandViewer(view)
-                            }
-                        }
-                    })
+                    button.setOnClickListener { view ->
+                        openHandViewer(view)
+                    }
                     Thread {
                         try {
                             val doc: Document = Jsoup.connect(editText.text.toString()).get()
@@ -102,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openHandViewer(view: View?) {
-        if (bboUrl != "" && !gambler) {
+        if (bboUrl != "") {
             val dealer = bboUrl.split("&d=")[1][0].toUpperCase()
             val level = findViewById<Spinner>(R.id.levelSpinner).getSelectedItem().toString()
             val denomination = findViewById<Spinner>(R.id.denominationSpinner)
