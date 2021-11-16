@@ -25,7 +25,7 @@ open class GamblerParser(content: Document) {
         if (hands.size < 4) {
             throw Exception("Found less than 4 hands")
         }
-        var chunks = ArrayList<String>(hands.size)
+        val chunks = ArrayList<String>(hands.size)
         for (i in hands.indices) {
             val s = "nwes"[i]
             val p = replaceSuits(hands[i])
@@ -50,11 +50,11 @@ open class GamblerParser(content: Document) {
 
     fun getBidding(content: Document): String {
         val summary = content.selectFirst(".center table")
-        var bidding = summary.text().replace("[!← ↑→↓, ]".toRegex(), "")
+        var bidding = replaceSuits(summary.text().replace("[!← ↑→↓, ]".toRegex(), ""))
         val replaceMap = hashMapOf(
             "&nbsp;" to "", "pass" to "p", "БК" to "n"
         )
-        for ((k, v) in replaceMap) bidding = bidding.replace(k, v);
+        for ((k, v) in replaceMap) bidding = bidding.replace(k, v)
         return "a=$bidding"
     }
 

@@ -86,15 +86,18 @@ class MainActivity : AppCompatActivity() {
 
         val contract = bidding.replace("p", "").replace("x", "").takeLast(2)
         val dealer = bboUrl.split("&d=")[1].split("&")[0]
-        val biddingLength =
-            bidding.replace("xx", "x").replace("0-9".toRegex(), "").length
+        val biddingSimplified = bidding.replace("xx", "x").replace("[0-9]".toRegex(), "")
+        val biddingLength = biddingSimplified.length
         val levelSpinner = findViewById<Spinner>(R.id.levelSpinner)
         val denominationSpinner =
             findViewById<Spinner>(R.id.denominationSpinner)
         val declarerSpinner = findViewById<Spinner>(R.id.declarerSpinner)
         levelSpinner.setSelection(contract[0].toString().toInt() - 1)
         denominationSpinner.setSelection("cdhsn".indexOf(contract[1]))
-        declarerSpinner.setSelection(("NESW".indexOf(dealer) + biddingLength) % 4)
+        val declarerDummyBidding = biddingSimplified.slice(biddingSimplified.length - 2 downTo 0 step 2)
+        val swap = (declarerDummyBidding.lastIndexOf(declarerDummyBidding[1]) - 1) % 2
+        // - 3 for splitting final passes and - 1 for extra seat won't affect the result
+        declarerSpinner.setSelection(("NESW".indexOf(dealer) + biddingLength + 2 * swap) % 4)
     }
 
     fun openHandViewer(view: View?) {
@@ -108,13 +111,29 @@ class MainActivity : AppCompatActivity() {
                 "♦" to "d",
                 "♥" to "h",
                 "♠" to "s",
-                "NT" to "N"
+                "NT" to "n"
             )[denomination]
             val declarer = findViewById<Spinner>(R.id.declarerSpinner)
                 .getSelectedItem().toString().toUpperCase(Locale.ROOT)
             val passes = "p".repeat(("NESW".indexOf(declarer) - "NESW".indexOf(dealer) + 4) % 4)
-            bboUrl = bboUrl.replace("&a=[^&]+".toRegex(), "")
-            bboUrl += "&a=$passes$level$denominationLatin"+"ppp"
+            if (gambler){
+                val bidding = bboUrl.split("&a=")[1].split("&")[0]
+                val currentContract = bidding.replace("x", "")
+                    .replace("ppp", "").takeLast(2)
+                val biddingSimplified = bidding.replace("xx", "x").replace("[0-9]".toRegex(), "")
+
+                val biddingLength = biddingSimplified.length
+                val declarerDummyBidding = biddingSimplified.slice(biddingSimplified.length - 2 downTo 0 step 2)
+                val swap = (declarerDummyBidding.lastIndexOf(declarerDummyBidding[1]) - 1) % 2
+                val currentDeclarer = "NESW"[("NESW".indexOf(dealer) + biddingLength + 2 * swap) % 4].toString()
+                val selectedContract = level + denominationLatin
+                if(!(currentContract == selectedContract && currentDeclarer == declarer)){
+                    bboUrl = bboUrl.replace("&a=[^&]+".toRegex(), "&a=$passes$level$denominationLatin"+"ppp")
+                }
+            } else {
+                bboUrl = bboUrl.replace("&a=[^&]+".toRegex(), "")
+                bboUrl += "&a=$passes$level$denominationLatin" + "ppp"
+            }
         }
         val browserIntent = Intent(ACTION_VIEW, Uri.parse(bboUrl))
         startActivity(browserIntent)
