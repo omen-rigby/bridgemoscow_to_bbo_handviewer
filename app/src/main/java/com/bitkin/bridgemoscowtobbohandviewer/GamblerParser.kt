@@ -10,9 +10,13 @@ open class GamblerParser(content: Document) {
 
     open fun parse(): String {
         val hands = getHands()
+//        Log.d("hands", hands.toString())
         val holdings = getHoldings(hands)
+//        Log.d("holdings", holdings.toString())
         val bidding = getBidding(content)
+//        Log.d("hands", bidding.toString())
         val boardInfo = getBoardInfo(content)
+//        Log.d("hands", boardInfo.toString())
         return "https://bridgebase.com/tools/handviewer.html?$holdings&$bidding&$boardInfo"
     }
 
@@ -29,7 +33,7 @@ open class GamblerParser(content: Document) {
         for (i in hands.indices) {
             val s = "nwes"[i]
             val p = replaceSuits(hands[i])
-            if (p.length != 17) {
+            if (p.replace("[shdc]".toRegex(), "").length != 13) {
                 // sxxxxhxxxdxxxcxxx
                 throw Exception(s.toUpperCase() + " hand is incorrect")
             }
@@ -55,6 +59,7 @@ open class GamblerParser(content: Document) {
             "&nbsp;" to "", "pass" to "p", "БК" to "n"
         )
         for ((k, v) in replaceMap) bidding = bidding.replace(k, v)
+        bidding = bidding.toLowerCase(Locale.ROOT)
         return "a=$bidding"
     }
 
