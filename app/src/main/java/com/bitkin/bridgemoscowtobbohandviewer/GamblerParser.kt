@@ -1,6 +1,5 @@
 package com.bitkin.bridgemoscowtobbohandviewer
 
-import android.util.Log
 import java.util.*
 import kotlin.collections.ArrayList
 import org.jsoup.nodes.Document
@@ -35,7 +34,7 @@ open class GamblerParser(content: Document) {
             val p = replaceSuits(hands[i])
             if (p.replace("[shdc]".toRegex(), "").length != 13) {
                 // sxxxxhxxxdxxxcxxx
-                throw Exception(s.toUpperCase() + " hand is incorrect")
+                throw Exception(s.uppercase() + " hand is incorrect")
             }
             chunks.add("$s=$p")
         }
@@ -59,7 +58,7 @@ open class GamblerParser(content: Document) {
             "&nbsp;" to "", "pass" to "p", "БК" to "n"
         )
         for ((k, v) in replaceMap) bidding = bidding.replace(k, v)
-        bidding = bidding.toLowerCase(Locale.ROOT)
+        bidding = bidding.lowercase(Locale.ROOT)
         return "a=$bidding"
     }
 
@@ -70,7 +69,7 @@ open class GamblerParser(content: Document) {
         val number = numDealerAndVul.selectFirst("button").text()
         val dealer = numDealerAndVul.text().split(" / ")[0].last().toString()
         val vul = numDealerAndVul.text().split(" / ")[1][0]
-            .toString().toLowerCase(Locale.ROOT).replace("a", "b")
+            .toString().lowercase(Locale.ROOT).replace("a", "b")
         return "d=$dealer&v=$vul&b=$number"
     }
 }
