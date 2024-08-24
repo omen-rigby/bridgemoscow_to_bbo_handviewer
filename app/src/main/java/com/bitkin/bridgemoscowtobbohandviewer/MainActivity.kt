@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     fun openHandViewer(view: View?) {
         if (bboUrl != "") {
-            val dealer = bboUrl.split("&d=")[1][0].toUpperCase()
+            val dealer = bboUrl.split("&d=")[1][0].uppercase()
             val level = findViewById<Spinner>(R.id.levelSpinner).getSelectedItem().toString()
             val denomination = findViewById<Spinner>(R.id.denominationSpinner)
                 .getSelectedItem().toString()
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                 "NT" to "n"
             )[denomination]
             val declarer = findViewById<Spinner>(R.id.declarerSpinner)
-                .getSelectedItem().toString().toUpperCase(Locale.ROOT)
+                .getSelectedItem().toString().uppercase(Locale.ROOT)
             val passes = "p".repeat(("NESW".indexOf(declarer) - "NESW".indexOf(dealer) + 4) % 4)
             if (gambler){
                 val bidding = bboUrl.split("&a=")[1].split("&")[0]
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
 
     fun isKnownURL(string: String): Boolean {
         try {
-            val siteNames = string.toLowerCase(Locale.ROOT).split("//").takeLast(1)[0]
+            val siteNames = string.lowercase(Locale.ROOT).split("//").takeLast(1)[0]
                 .split('.')
             val supportedSites = arrayOf("bridgemoscow", "gambler", "nnbridge", "bridgesport",
                                          "bridgeresults")

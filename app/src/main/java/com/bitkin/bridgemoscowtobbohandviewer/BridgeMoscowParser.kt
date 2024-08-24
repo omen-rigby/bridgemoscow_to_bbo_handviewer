@@ -1,6 +1,5 @@
 package com.bitkin.bridgemoscowtobbohandviewer
 
-import android.util.Log
 import org.jsoup.nodes.Document
 import java.util.*
 
@@ -39,11 +38,11 @@ class BridgeMoscowParser(content: Document): GamblerParser(content) {
 //            .filter {td -> td.select(">img").isEmpty()}
 //            .map {e -> e.text()}.joinToString().filter { e-> e.isDigit()}
         val dealer = table.select("td")
-            .first {td -> "dlr:" in td.text().toLowerCase(Locale.ROOT)}.text()
-            .toLowerCase(Locale.ROOT).split("dlr: ")[1][0]
+            .first {td -> "dlr:" in td.text().lowercase(Locale.ROOT)}.text()
+            .lowercase(Locale.ROOT).split("dlr: ")[1][0]
         val vul = table.select("td")
-            .first {td -> "vul:" in td.text().toLowerCase(Locale.ROOT)}.text()
-                .toLowerCase(Locale.ROOT).split("vul: ")[1]
+            .first {td -> "vul:" in td.text().lowercase(Locale.ROOT)}.text()
+                .lowercase(Locale.ROOT).split("vul: ")[1]
             .replace("none", "-").replace("a", "b")
             .replace(" ", "")[0]
         return "d=$dealer&v=$vul&b=$number"
